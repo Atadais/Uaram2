@@ -32,28 +32,6 @@
       flex: 1;
     }
 
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
-      border-bottom: 2px solid rgba(74, 94, 63, 0.1);
-      padding-bottom: 1rem;
-      display: inline-block;
-    }
-
-    .accent-green {
-      color: #4a5e3f;
-    }
-
-    .section-sub {
-      color: #5a5650;
-      font-weight: 300;
-      margin-bottom: 2.5rem;
-      font-size: 1.05rem;
-    }
-
     /* ===== HEADER ===== */
     .navbar {
       padding: 1.4rem 0;
@@ -155,17 +133,82 @@
       transition: all 0.3s;
     }
 
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      border-bottom: 2px solid rgba(74, 94, 63, 0.1);
+      padding-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .accent-green {
+      color: #4a5e3f;
+    }
+
+    .page-sub {
+      color: #5a5650;
+      font-weight: 300;
+      margin-top: 0.5rem;
+      font-size: 1.05rem;
+    }
+
     /* ===== REVIEWS WIDGET ===== */
     .reviews-wrapper {
-      margin-top: 2rem;
+      margin-top: 2.5rem;
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(74, 94, 63, 0.06);
+      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.01);
+      background: #faf8f5;
+    }
+
+    /* Декоративный элемент сверху */
+    .reviews-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #4a5e3f, #8aa37e, #4a5e3f);
+      z-index: 2;
     }
 
     .reviews-wrapper iframe {
       width: 100%;
-      height: 700px;
-      border: 1px solid rgba(74, 94, 63, 0.1);
-      border-radius: 4px;
+      height: 650px;
+      border: none;
       background: #faf8f5;
+      display: block;
+    }
+
+    /* ===== СТИЛИ ДЛЯ ПРОКРУТКИ ===== */
+    /* Скрываем стандартную прокрутку, показываем кастомную */
+    .reviews-wrapper::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .reviews-wrapper::-webkit-scrollbar-track {
+      background: rgba(74, 94, 63, 0.04);
+      border-radius: 3px;
+    }
+
+    .reviews-wrapper::-webkit-scrollbar-thumb {
+      background: #4a5e3f;
+      border-radius: 3px;
+      transition: background 0.3s;
+    }
+
+    .reviews-wrapper::-webkit-scrollbar-thumb:hover {
+      background: #3a4e30;
     }
 
     /* ===== FOOTER ===== */
@@ -268,7 +311,7 @@
         padding: 1rem 1.2rem 2rem;
       }
 
-      h1 {
+      .page-header h1 {
         font-size: 2.2rem;
       }
 
@@ -298,13 +341,33 @@
         font-size: 1.2rem;
       }
 
-      h1 {
+      .page-header h1 {
         font-size: 1.8rem;
       }
 
       .reviews-wrapper iframe {
         height: 380px;
       }
+
+      .reviews-wrapper {
+        border-radius: 0;
+      }
+    }
+
+    /* ===== FADE-IN ANIMATION ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reviews-wrapper {
+      animation: fadeInUp 0.8s ease;
     }
   </style>
 </head>
@@ -333,16 +396,19 @@
   <!-- ===== MAIN CONTENT ===== -->
   <div class="container">
 
-    <h1>Отзывы <span class="accent-green">Uaram</span></h1>
-    <p class="section-sub">Что говорят наши гости</p>
+    <div class="page-header">
+      <h1>Отзывы <span class="accent-green">Uaram</span></h1>
+      <p class="page-sub">Что говорят наши гости</p>
+    </div>
 
     <div class="reviews-wrapper">
       <!-- ===== ВИДЖЕТ ОТЗЫВОВ С ЯНДЕКС.КАРТ ===== -->
-      <!-- Показывает реальные отзывы. При нажатии "Написать отзыв" — переход на Яндекс.Карты -->
+      <!-- ID организации: 151410829545 -->
       <iframe
         src="https://yandex.ru/maps-reviews-widget/151410829545?comments"
         allowfullscreen="true"
-        loading="lazy">
+        loading="lazy"
+        title="Отзывы о ресторане Uaram на Яндекс.Картах">
       </iframe>
     </div>
 
@@ -382,6 +448,17 @@
         navbar.classList.add('scrolled');
       } else {
         navbar.classList.remove('scrolled');
+      }
+    });
+
+    // ===== ЗАГРУЗКА IFRAME С ЗАДЕРЖКОЙ ДЛЯ ПЛАВНОСТИ =====
+    document.addEventListener('DOMContentLoaded', function() {
+      const iframe = document.querySelector('.reviews-wrapper iframe');
+      if (iframe) {
+        // Небольшая задержка для красивого появления
+        setTimeout(() => {
+          iframe.style.opacity = '1';
+        }, 300);
       }
     });
   </script>
